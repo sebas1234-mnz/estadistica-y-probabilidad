@@ -1,0 +1,216 @@
+#script para la tabla de datos: Ecuación de Mincer.
+#cargar los datos 
+library(haven)
+enaho01a_2023_500 <- read_dta("C:/Users/SEBAS/Downloads/906-Modulo05/enaho01a-2023-500.dta")
+View(enaho01a_2023_500)
+
+# trabajar con la tabla de datos: se carga "tidyverse"
+library(tidyverse)
+library(dplyr)
+# Se selecciona las columnas necesarias para el trabajo
+# ubigeo: ubicación geografica del distrito en la cual reside la unidad de análisis
+# estrato: tamaño poblacional del distrito
+# dominio: región en la cual se encuentra el distrito (costa, sierra, selva, Lima Metropolitana)
+# p207: sexo
+# p301a: grado o nivel de estudios
+# p513a1: antiguedad en años en la actividad principal
+# p513a2: antiguedad en meses en la actividad principal
+# p513t: horas de trabajo por semana
+# p530a: Ingreso por la actividad principal
+# p209: Estado civil
+# p203: Jefe de hogar
+tdmincer<-select(enaho01a_2023_500,ubigeo,estrato,
+                 dominio, p207,p301a,p513a1,p513a2,
+                 p513t,p530a,ocupinf,ocu500,p209,p203)
+
+table(as_factor(tdmincer$p207)) # se trabaja solo con hombres
+tdmincer <- tdmincer %>% filter(p207==1)
+
+table(as_factor(tdmincer$p301a)) # Se trabajara unicamente con educacion superior
+tdmincer <- tdmincer %>% filter(p301a %in% c(8, 10, 11))
+
+table(as_factor(tdmincer$ubigeo)) # se trabajara con Junin y Ayacucho
+tdmincer <- tdmincer %>% filter(ubigeo %in% c( "050101", "050102", "050103", "050104", "050105", "050106", "050107", "050108", 
+                                               "050110", "050111", "050112", "050114", "050115", "050116", "050201", "050202", 
+                                               "050203", "050205", "050206", "050301", "050303", "050304", "050401", "050402",
+                                               "050403", "050405", "050406", "050407", "050408", "050409", "050410", "050501",
+                                               "050502", "050503", "050505", "050507", "050508", "050509", "050510", "050601",
+                                               "050603", "050605", "050606", "050610", "050612", "050613", "050615", "050616", 
+                                               "050619", "050701", "050702", "050705", "050801", "050803", "050804", "050805", 
+                                               "050806", "050903", "050906", "050908", "051001", "051002", "051004", "051005", 
+                                               "051006", "051012", "051101", "051105", "051106", "051108", 
+                                               "110101", "110102", "110103", "110104", "110105", "110106", "110107", "110108",
+                                               "110109", "110110", "110111", "110112", "110113", "110114", "110201", "110202",
+                                               "110203", "110204", "110205", "110206", "110207", "110209", "110210", "110211",
+                                               "110301", "110303", "110304", "110305", "110401", "110402", "110403", "110501", 
+                                               "110503", "110504", "110505", "110506", "110507"))
+
+View(tdmincer)
+
+# Se prueba con algunas tablas y sumarias
+# tablas de variables cualitativas
+table(as_factor(tdmincer$dominio)) # se recodifica a region: costa, sierra, selva, Lima Metropolitana
+table(as_factor(tdmincer$estrato)) # Se recodifica a zona: Urbana y Rural
+table(as_factor(tdmincer$ocu500)) # se trabaja con los ocupados
+table(as_factor(tdmincer$ocupinf)) # Se trabajara con ambos. Lo ideal es solo trabajar con los asalariados
+table(as_factor(tdmincer$p209)) # se recodifica a: casados o convivientes y Sin pareja
+table(as_factor(tdmincer$p203)) # se recodifica a: Jefe de hogar y No jefe de hogar
+
+
+# sumarias de variables cuantitativas
+summary(tdmincer$p513a1) # se agregara con la p513a2
+summary(tdmincer$p513a2) # se agregara con la p513a1
+summary(tdmincer$p513t) # se filtra a las mayores a cero
+summary(tdmincer$p530a) # se filtra a las mayores a cero & se desecha los "NA"
+
+### Se construye las variables para la ecuación minceriana ###
+
+#Se filtran variables
+tdmincer<-filter(tdmincer,p513t>0)# se filtra para valores mayores a cero
+summary(tdmincer$p513t)
+tdmincer<-filter(tdmincer,p530a>0)# se filtra para valores mayores a cero
+summary(tdmincer$p530a)
+tdmincer<-filter(tdmincer,p301a<12)# se omite EBEspecial
+table(as_factor(tdmincer$p301a))
+
+#creación de variables de trabajo
+# Se construye la tasa salarial por día: tsd
+tdmincer$tsd<-7/30*(tdmincer$p530a/tdmincer$p513t)
+summary(tdmincer$tsd)
+
+tdmincer$Lntsd<-log(tdmincer$tsd)
+summary(tdmincer$Lntsd)
+
+# Se construye los años de estudio solo para educacion superior: aeduc
+# Filtra los datos para trabajar solo con las categorías 8 (superior no universitaria completa),
+# 10 (superior universitaria completa), y 11 (maestría/doctorado)
+
+
+tdmincer$aeduc<-if_else(tdmincer$p301a==8,14,
+                        if_else(tdmincer$p301a==10,16,if_else(tdmincer$p301a==11,18, NA)))
+
+summary(tdmincer$aeduc) # se filtran los "NA´s"
+tdmincer<-filter(tdmincer,aeduc!= "NA")# se filtra los NA´s en aeduc
+summary(as_factor(tdmincer$aeduc))
+
+table(as_factor(tdmincer$aeduc))
+
+# Se construye la antiguedad en años: exp
+tdmincer$exp<-tdmincer$p513a1+tdmincer$p513a2/12
+summary(tdmincer$exp)
+# Se la antiguedad en años: exp^2
+tdmincer$exp2<-(tdmincer$exp)^2
+summary(tdmincer$exp2)
+
+
+#creación de variables de control y variables de la ecuacion en formato agrupado 
+# Usando el comando recode
+install.packages("car")
+library(car)
+
+#Se crea la columna dep usando condiciones segun los codigos de ubigeo por departamentos
+
+tdmincer <- tdmincer %>%
+  mutate(Departamentos = case_when(
+    ubigeo %in% c("050101", "050102", "050103", "050104", "050105", 
+                  "050106", "050107", "050108", "050110", "050111", 
+                  "050112", "050114", "050115", "050116", "050201", 
+                  "050202", "050203", "050205", "050206", "050301", 
+                  "050303", "050304", "050401", "050402", "050403", 
+                  "050405", "050406", "050407", "050408", "050409", 
+                  "050410", "050501", "050502", "050503", "050505", 
+                  "050507", "050508", "050509", "050510", "050601", 
+                  "050603", "050605", "050606", "050610", "050612", 
+                  "050613", "050615", "050616", "050619", "050701", 
+                  "050702", "050705", "050801", "050803", "050804", 
+                  "050805", "050806", "050903", "050906", "050908", 
+                  "051001", "051002", "051004", "051005", "051006", 
+                  "051012", "051101", "051105", "051106", "051108") ~ "Ayacucho",
+    ubigeo %in% c("110101", "110102", "110103", "110104", "110105", 
+                  "110106", "110107", "110108", "110109", "110110", 
+                  "110111", "110112", "110113", "110114", "110201", 
+                  "110202", "110203", "110204", "110205", "110206", 
+                  "110207", "110209", "110210", "110211", "110301", 
+                  "110303", "110304", "110305", "110401", "110402", 
+                  "110403", "110501", "110503", "110504", "110505", 
+                  "110506", "110507") ~ "Junin",
+    TRUE ~ NA_character_  # Asigna NA si no está en ninguno de los vectores
+  ))
+
+
+
+#se convierte Departamentos en un factor para poder analizarlo
+
+tdmincer$Departamentos <- as_factor(tdmincer$Departamentos)
+
+table(as_factor(tdmincer$Departamentos)) #comprobacion
+
+
+# Se crea la columna estadoc usando la columna p209
+tdmincer$estadoc <- recode(tdmincer$p209, "1:2=1; 3:6=2")
+tdmincer$estadoc <- factor(tdmincer$estadoc, labels = c("Casados o Convivientes", "Sin pareja"))
+
+table((tdmincer$p209))
+table((tdmincer$estadoc))
+
+# Se crea la columna jefeh usando la columna p203
+tdmincer$jefeh <- recode(tdmincer$p203, "1=1; 2:11=2")
+tdmincer$jefeh <- factor(tdmincer$jefeh, labels = c("Jefe de Hogar", "Miembros no jefes"))
+
+table(as_factor(tdmincer$p203))
+table(as_factor(tdmincer$jefeh))
+
+
+# Se crea la columna región usando la columna dominio
+tdmincer$region <- recode(tdmincer$dominio, "2=1; 5=2; 7=3")
+tdmincer$region <- factor(tdmincer$region, labels = c("Costa", "Sierra", 
+                                                      "Selva"))
+
+table(as_factor(tdmincer$dominio))
+table(as_factor(tdmincer$region))
+
+# Se crea la columna zona usando la columna estrato
+tdmincer$zona <- recode(tdmincer$estrato, "1:6=1; 7:8=2")
+tdmincer$zona <- factor(tdmincer$zona, labels = c("Urbana", "Rural"))
+
+table(as_factor(tdmincer$estrato))
+table(as_factor(tdmincer$zona))
+
+# Se recodifica la tasa salarial
+hist(tdmincer$tsd)
+summary(tdmincer$tsd)
+
+hist(tdmincer$Lntsd)
+summary(tdmincer$Lntsd)
+
+tdmincer$Lntsda <- recode(tdmincer$Lntsd, "-Inf:0=1; 0:2=2; 2:4=3; 4:Inf=4")
+tdmincer$Lntsda <- factor(tdmincer$Lntsda, labels = c("<0", "0 a 2", 
+                                                      "2 a 4",">4"))
+
+table(as_factor(tdmincer$Lntsda))
+
+# Se recodifica los años de estudios (educación)
+table(as_factor(tdmincer$p301a)) # Se recodifica a grados: superior no NUniv y superior Univ
+
+tdmincer$geduc <- recode(tdmincer$p301a, "8=1; 10=2; 11=3")
+tdmincer$geduc <- factor(tdmincer$geduc, labels = c("Superior No Univ.", 
+                                                    "Superior Univ.", "Posgrado"))
+table(tdmincer$geduc)
+
+#se convierte geduc en un factor para poder analizarlo
+tdmincer$geduc <- as_factor(tdmincer$geduc)
+
+# Se recodifica los años de experiencia
+hist(tdmincer$exp)
+summary(tdmincer$exp)
+
+tdmincer$expa <- recode(tdmincer$exp, "0:5=1; 5:10=2; 10:20=3; 20:30=4; 30:40=5; 
+                        40:Inf=6" )
+tdmincer$expa <- factor(tdmincer$expa, labels = c("0 a 5", "5 a 10", 
+                                                  "10 a 20","20 a 30", "30 a 40",">40")) 
+table(as_factor(tdmincer$expa))
+# Se elimina la tabla inicial
+rm(enaho01a_2023_500)
+
+# Se graba la tabla final y con ella iniciar el análisis descriptivo
+write_dta(tdmincer, "tdmincer.dta")
