@@ -1,0 +1,710 @@
+---
+title: "Capital humano y ecuación Mincer: Análisis de tablas, gráficos de frecuencia y medidas de resumen de el departamento de Ayacucho y Junín"
+author: "Toribio Victoria Luis - Veliz Arce Luis - Benancio Casimiro Zelmira -  Galvez
+  Romero Gabriel"
+date: "2024-10-12"
+output: word_document
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\
+
+**Resumen** 
+
+Este trabajo aplica la ecuación de Mincer para analizar cómo la educación y la experiencia laboral influyen en los ingresos de los hombres en los departamentos de Ayacucho y Junín, utilizando datos de la Encuesta Nacional de Hogares (ENAHO). El estudio compara las diferencias salariales, el nivel educativo, y la experiencia entre ambas regiones, y evalúa cómo el capital humano afecta los salarios.
+
+Los resultados muestran que los hombres con más años de educación y experiencia laboral obtienen ingresos más altos, pero con importantes variaciones entre Ayacucho y Junín. En Junín, donde hay más oportunidades educativas y una economía más diversificada, los ingresos son superiores en comparación con Ayacucho, que presenta una mayor dependencia de actividades agrícolas y menos acceso a educación superior.
+
+Además, se detecta una marcada desigualdad en la distribución de ingresos, exacerbada por factores como la informalidad laboral y las diferencias regionales en acceso a empleo formal. La mayor parte de la población en Junín tiene trabajos formales y mejor remunerados, mientras que en Ayacucho prevalece el empleo informal, con salarios más bajos.
+
+**INTRODUCCIÓN**
+
+ En este trabajo, aplicaremos la ecuación de Mincer utilizando datos de la Encuesta Nacional de Hogares (ENAHO) del Instituto Nacional de Estadística e Informática (INEI) de Perú
+
+La ENAHO es una fuente rica y detallada de información socioeconómica y demográfica que nos permitirá realizar un análisis exhaustivo de los determinantes de la educación superior en hombres en el departamento de El departamento de Ayacucho que se encuentra ubicado en la zona sur central de los andes peruanos, con un área total de 43 821 km2, equivalente al 3,4 por ciento del territorio nacional. Limita por el norte con Junín que se encuentra ubicado en la zona central de los andes peruanos, con una superficie de 44 329 km2, que representa el 3,4 por ciento del territorio nacional.
+El objetivo principal de este estudio es aplicar los conceptos y técnicas aprendidas en clase, para estimar y interpretar las tables e histogramas modelos que expliquen la educación superior en los hombres haciendo un análisis comparativo de ambos departamentos. A través de este análisis, se buscará: 
+Estimación de la ecuación de Mincer: Los datos fueron adquiridos proceden de la Encuesta Nacional de Hogares (ENAHO), que provee el Instituto Nacional de Estadística e Informática (INEI), se utilizó el software de RStudio. 
+
+Realizando un análisis e interpretación económica: Interpretar los coeficientes obtenidos en términos económicos, evaluando cómo la educación y la experiencia afectan los salarios en Perú. A lo largo del trabajo, se emplearán técnicas estadísticas para así asegurar los resultados. Además, se discutirá la relevancia de los resultados en el contexto de económico, considerando cómo los hallazgos pueden informar distintos contextos que llega a tener la ecuación de Mincer.
+\
+
+**MARCO TEÓRICO**
+
+**1.ECUACIÓN DE MINCER**
+A quien no le gustaría medir la rentabilidad que tendrá los años y el tiempo invertido en la educación Jacob Mincer, después de haber observado este hecho en estados unidos, en su libro “escolarización”, experiencia e ingresos, da a conocer un modelos de determinación, de los ingresos, si bien esta controversia generó mucha bibliografía en el siglo 20, la que mas se utiliza en la ecuación de Mincer y ha permitido la comparación de la eficiencia de la producción en educación. Parte de la teoría del capital humano que nos dice que existe un relación positiva entre el numero de años de escolaridad y sus ingresos a futuro. La ecuación de Mincer estima un modelo semilogarítmico teniendo como variable dependiente el logaritmo de ingresos y a la variable independiente los años de educción, la experiencia laboral y el cuadrado de la experiencia laboral. A continuación se presenta el modelo de la ecuacion: 
+\
+
+ln(𝑌) = 𝛽0 + 𝛽1𝐸𝑑𝑢𝑐 + 𝛽2𝐸𝑥𝑝 + 𝛽3𝐸𝑥𝑝2 + 𝜀 
+
+\
+Donde: 
+Y: representa los ingresos del individuo 
+Educ: es el número de años de educación formal completada 
+Exp: Años de experiencia laboral 
+𝜀: es el termino de perturbación aleatoria de media cero. 
+\
+En el cual entre una de las hipótesis que tenemos es que el valore del coeficiente de los años de educación formal se interpreta como el impacto de un año adicional de estudio 
+obtenido por los trabajadores, pero este no va a ser siempre mayor o no va estar siempre en crecimiento, mientras aumenta más la experiencia los ingresos aumenta, pero desde un punto determinado este tiene un efecto menor que el que le precede, por lo que se espera que la estimación de b2 sea positiva y b3 sea negativa.
+
+**1.1.	Desigualdad Regional y Retornos a la Escolaridad:** 
+La desigualdad de ingresos entre regiones puede explicarse, en parte, por diferencias en el acceso a la educación y las oportunidades laborales. De acuerdo con Chiswick y otros teóricos, los retornos a la educación no son homogéneos en todas las áreas, y tienden a variar dependiendo del contexto económico y social. En áreas más desarrolladas o urbanizadas, como puede ser el caso de Junín , los retornos a la escolaridad suelen ser mayores debido a la mayor demanda de mano de obra calificada, mientras que en regiones rurales o menos desarrolladas, como Ayacucho , los retornos pueden ser menores debido a la predominancia de sectores agrícolas o de baja tecnología.
+\
+   En este marco, se busca analizar si las diferencias en los ingresos laborales entre Ayacucho y Junín pueden ser      atribuidas a diferencias en el capital humano acumulado (niveles de educación y experiencia) y cómo esto impacta     el retorno a la educación en cada departamento.
+
+**1.2.	 Análisis Comparativo de Ayacucho y Junín**
+El análisis comparativo que se realizará entre los departamentos de Ayacucho y Junín se basa en la descripción de variables como el ingreso laboral, la educación, la experiencia laboral, el género y la ocupación. Utilizando los datos de la ENAHO 2023, se busca describir y comparar:
+\
+•	Distribución de los ingresos en ambos departamentos.
+•	Diferencias en los niveles de educación y cómo estos impactan los ingresos en cada región.
+•	Comparación de la experiencia laboral entre los trabajadores de Ayacucho y Junín.
+•	Brechas de género en los ingresos laborales, controlando por educación y ocupación.
+\
+Este análisis permitirá entender las posibles causas de las diferencias salariales y de oportunidades entre estas dos regiones del Perú, y cómo estas diferencias pueden ser explicadas desde la perspectiva de la teoría del capital humano y la ecuación de Mincer.
+\
+**MATERIAL y METODOS**
+\
+Plataforma de Desarrollo: Para realizar el análisis según la teoría de Mincer sobre el comportamiento económico en el Perú, se empleó la plataforma de desarrollo RStudio que ofrece un entorno integrado que facilita la manipulación de datos, análisis estadísticos y la generación de informes de manera eficiente.
+Origen de los Datos: Los datos utilizados en este estudio fueron obtenidos de la Encuesta Nacional de Hogares (ENAHO) realizada por el Instituto Nacional de Estadística e Informática (INEI) del Perú. 
+Proceso de Recopilación de Datos: Se accedió a los conjuntos de datos correspondientes de ENAHO a través de fuentes oficiales y plataformas en línea proporcionadas por el INEI. Los datos fueron descargados en formatos compatibles con R, como archivos CSV, para facilitar su importación y manipulación en el entorno RStudio. 
+Procesamiento y Limpieza de Datos: Se llevó a cabo un proceso exhaustivo de limpieza y preprocesamiento de datos para eliminar posibles errores, valores atípicos y asegurar la coherencia de los mismos. Se seleccionaron y codificaron las variables relevantes para el estudio.
+Presentación de Resultados: Los resultados fueron presentados utilizando herramientas gráficas y estadísticas para comunicar de manera efectiva los hallazgos económicos. Se emplearon gráficos y análisis de resultados económicos para destacar las tendencias y patrones encontrados en el estudio.
+\
+**Resultado**
+\
+**tabla 1**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+library(summarytools)
+tdmincer <- read_dta("C:/Users/SEBAS/Downloads/tdmincer.dta")
+data1 <- read_dta("C:/Users/SEBAS/Downloads/data1.dta")
+data2 <- read_dta("C:/Users/SEBAS/Downloads/data2.dta")
+
+
+freq(as_factor(tdmincer$Lntsda))
+
+```
+\
+**Tabla 2:Medidas de resumen**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+summary(tdmincer$Lntsd)
+```
+\
+**Tabla 3:Medidas estadisticas agrupadas por años de educacion**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+library(dplyr)
+tdmincer%>%group_by(aeduc)%>%summarise(min(Lntsd), mean(Lntsd), 
+                                       sd(Lntsd),max(Lntsd))
+
+```
+Aquí se explica una diversificación de los datos comparando dónde los salarios son más bajos. Este análisis descriptivo se enfocó únicamente en hombres con educación superior. En la tabla se observa que, dentro de los salarios bajos o mínimos, se refleja que a medida que el nivel educativo es menor, los salarios también son más bajos en comparación con aquellos que cuentan con un posgrado. Lo mismo ocurre en los valores promedio (media) y en los salarios máximos.
+En cuanto a la desviación estándar, se observa que tiende a disminuir a medida que aumenta el nivel educativo. Esto sugiere que los salarios son más homogéneos entre las personas con mayor nivel educativo, es decir, hay menos variabilidad en los salarios en este grupo.
+\
+
+**Tabla 4:Medidas estadisticas agrupadas por experiencia**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+tdmincer%>%group_by(expa)%>%summarise(min(Lntsd), mean(Lntsd), 
+                                      sd(Lntsd),max(Lntsd))
+
+```
+ El análisis se basa en cómo los años de experiencia afectan los salarios de las personas. Se observa que, a menor cantidad de años de experiencia laboral, los salarios tienden a ser más bajos, ya que esto se relaciona con el menor cúmulo de conocimientos adquiridos. Esto también se refleja en la media (promedio) y en el salario máximo que se puede percibir, mostrando una clara correlación entre la experiencia laboral y los niveles salariales.
+ \
+ 
+ **Grafico 1**
+ 
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+library(ggplot2)
+
+tdmincer$Departamentos <- as_factor(tdmincer$Departamentos)
+ggplot(data = tdmincer, aes(x = Lntsd, fill = Departamentos, colour = Departamentos)) +
+  geom_histogram(alpha = 0.5, position = "dodge") +  # Cambiado a 'dodge'
+  scale_color_manual(values = c("Ayacucho" = "#006400", "Junin" = "#006400"), 
+                     labels = c("Ayacucho", "Junin")) +
+  scale_fill_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC"), 
+                    labels = c("Ayacucho", "Junin")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Logaritmo de la Tasa Salarial
+             por Departamento - Enaho 2023") +
+  theme_bw(base_size = 14)
+
+```
+\
+
+**Grafico 2**
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+library(tidyverse)
+library(car)
+library(summarytools)
+library(DescTools)
+library(ineq)
+library(corrplot)
+library(ggplot2)
+library(PerformanceAnalytics)
+library(expss)
+library(DT)
+lorenz_curve_tsd <- Lc(tdmincer$tsd)
+
+plot(lorenz_curve_tsd, xlab = "Proporción acumulada de individuos", 
+     ylab = "Proporción acumulada de la tasa salarial diaria", 
+     main = "Curva de Lorenz: Tasa Salarial Diaria - Enaho 2023")
+
+```
+
+En este caso, el hecho de que la curva de Lorenz se sitúe por debajo de la línea de 45 grados sugiere una desigualdad en la distribución de los salarios diarios. Esto implica que una pequeña parte de la población concentra una gran proporción de los ingresos totales, mientras que la mayoría recibe solo una fracción reducida de estos. Esta discrepancia refleja una distribución desigual de los salarios dentro de la población.
+\
+
+**Coeficiente de gini**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+gini <- Gini(tdmincer$Lntsd)
+print(gini)
+
+
+```
+Un coeficiente de Gini de 0,286 refleja una desigualdad moderada en la distribución de los salarios diarios de la población analizada. Esto indica que, aunque no existe una igualdad completa en la distribución de los ingresos, la desigualdad no es extrema en comparación con otras situaciones donde el coeficiente de Gini podría ser significativamente mayor.
+\
+
+**Tabla 5**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+freq(as_factor(tdmincer$aeduc))
+
+```
+\
+
+**tabla 6**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+summary(tdmincer$aeduc)
+
+```
+En primer lugar, los números 14, 16 y 18 representan las variables "superior no universitario completo", "superior universitario completo" y "maestría y doctorado", respectivamente. Estos datos muestran que, a medida que el grado de educación es más alto, la frecuencia relativa disminuye, es decir, hay menos personas que alcanzan esos niveles de educación superior.
+\
+
+**Grafico 3**
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+tdmincer$Departamentos <- as_factor(tdmincer$Departamentos)
+ggplot(tdmincer, aes(aeduc, fill = Departamentos)) + 
+  geom_bar(position = "dodge", colour = "black") +
+  
+  labs(x = "Años de Educación", y = "Frecuencias", fill = "Departamento") +
+  ylim(c(0, 100)) +
+  
+  ggtitle("Diagrama de barras en Hombres por departamento
+   con grados de Educación Superior - Enaho 2023") +   
+  
+  theme_bw(base_size = 14) +
+  
+  geom_text(aes(label = ..count..), stat = 'count',
+            position = position_dodge(0.9),
+            vjust = -0.5, 
+            size = 5.0) +
+  
+  scale_fill_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC")) +
+  
+  facet_wrap(~"Distribución de Años de Estudio por Departamento")
+
+```
+
+Aquí se realiza una comparación entre los departamentos de Ayacucho y Junín, relacionando la cantidad de personas con su grado de educación correspondiente. Se observa que en Junín hay más personas que han alcanzado los niveles de educación superior no universitaria, universitaria y de posgrado en comparación con Ayacucho. De manera general, se destaca que los grados superiores al nivel no universitario cuentan con menos personas, lo que podría estar relacionado con los costos de la educación o la calidad de preparación que brinda un departamento en comparación con el otro.
+\
+
+**Tabla 7**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+freq(as_factor(tdmincer$expa))
+
+```
+\
+
+**Tabla 8**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+summary(tdmincer$exp)
+
+```
+Hay un mayor número de personas que se encuentran en los niveles de experiencia mínima, lo que provoca que este grupo, dentro del análisis, reciba salarios más bajos. Esto se debe a que, generalmente, menos años de experiencia están asociados con menores ingresos.
+\
+
+**Grafico 4**
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+ggplot(data = tdmincer, aes(x = exp, fill = Departamentos, colour = Departamentos)) +
+  geom_histogram(alpha = 0.5, position = "dodge") +  # Cambiado a 'dodge'
+  scale_color_manual(values = c("Ayacucho" = "#006400", "Junin" = "#006400"), 
+                     labels = c("Ayacucho", "Junin")) +
+  scale_fill_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC"), 
+                    labels = c("Ayacucho", "Junin")) +
+  labs(x = "Experiencia", y = "Frecuencia") +
+  ggtitle("Distribución de la Experiencia por Departamento 
+                          - Enaho 2023") +
+  theme_bw(base_size = 14)
+
+```
+
+Tanto en Ayacucho como en Junín, se observa una concentración significativa de personas con pocos años de experiencia laboral. Esto sugiere que podría haber una alta rotación laboral o que un número considerable de personas están recién ingresando al mercado laboral en estos departamentos, lo que podría influir en la estructura salarial y en la dinámica del empleo local.
+\
+
+**Tabla 9**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+freq(as_factor(tdmincer$zona)) 
+
+```
+Dominio de la población urbana: El 92.44% de los casos corresponden a áreas urbanas, lo que indica una clara concentración de la población en este tipo de área. Minoría de la población rural: Solo el 7.56% de los casos están ubicados en áreas rurales, lo que sugiere una población más dispersa en estos entornos. No se reportan datos faltantes: La columna "<NA>" muestra cero casos, lo que indica que todos los registros tienen datos válidos para la variable "Tipo de Área".
+Es altamente probable que los habitantes de áreas urbanas tengan, en promedio, mayores ingresos que aquellos que residen en áreas rurales, dada la concentración de oportunidades económicas en las zonas urbanas.
+\
+
+**Tabla 10**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+freq(as_factor(tdmincer$jefeh)) 
+
+```
+\
+**Mayores ingresos en hogares con jefe de hogar:** Los hogares que cuentan con un jefe de hogar definido podrían tener, en promedio, mayores ingresos totales debido a la contribución salarial de esta persona, que generalmente desempeña el rol principal en la generación de ingresos dentro del hogar. Esto sugiere que la estabilidad laboral y el liderazgo económico del jefe de hogar pueden influir significativamente en el nivel de ingresos de la familia.
+\
+
+**Tabla 11*
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+freq(as_factor(tdmincer$region))
+
+```
+Dada la concentración de actividades económicas, infraestructuras y oportunidades laborales en la Costa, es probable que los ingresos promedio en esta región sean más elevados. Esto explica la mayor concentración poblacional en comparación con las regiones de la Sierra y la Selva, donde el menor desarrollo económico y la menor densidad de población podrían estar asociados a ingresos promedio más bajos.
+\
+
+**Tabla 12**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+freq(as_factor(tdmincer$estadoc))
+
+```
+\
+**Casados o Convivientes (61.63%):** La mayoría de los individuos en la muestra, casi dos tercios, están casados o viviendo en unión libre.  
+Sin Pareja (38.37%): Un porcentaje significativo de individuos no tiene una pareja estable.
+\
+**Hogares con parejas y mayores ingresos:** Es común asociar los hogares con parejas a niveles de ingreso más altos, lo que se puede explicar por:  
+\
+
+- **Ingreso doble**: Ambos miembros de la pareja pueden estar empleados, lo que incrementa el ingreso total del hogar.  
+- **Economías de escala**: Al compartir los gastos, estos hogares pueden tener una mayor capacidad de ahorro o inversión.
+\
+
+**Tabla 13**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+freq(as_factor(tdmincer$ocupinf))
+
+```
+El 60,47% de los trabajadores en la muestra se encuentra en el sector informal. Este tipo de empleo suele estar asociado a menores niveles de seguridad laboral, falta de beneficios sociales y un acceso limitado a servicios de protección, lo que generalmente se traduce en salarios más bajos. Esto podría explicar por qué una gran parte de esta población tiene una tasa salarial inferior, en contraste con el sector formal, donde los trabajadores suelen percibir ingresos más altos.
+\
+
+**Tabla 14**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+freq(as_factor(tdmincer$geduc))
+
+```
+La mayoría de las personas encuestadas (52.33%) posee títulos técnicos o tecnológicos. Un porcentaje significativo (42.44%) cuenta con grados universitarios, mientras que una minoría (5.23%) ha realizado estudios de posgrado.
+\
+
+**Grafico 5** 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(corrplot)
+library(ggplot2)
+
+tdmincer$Departamentos <- as_factor(tdmincer$Departamentos)
+ggplot(tdmincer, aes(exp, Lntsd)) +
+  geom_point(aes(color = Departamentos), size = 3) +  
+  geom_smooth(color = "black", fill = "lightgray") +  # Añadiendo líneas de confianza
+  labs(title = "Relación entre el Lntsd y la Experiencia",
+       subtitle = "Hombres con Educación Superior en Ayacucho y Junín - Enaho 2023") +
+  scale_color_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC"))
+
+```
+\
+
+**coeficiente de correlacion de spearman del ln de la tasa salarial y los años de experencia** 
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+cor(tdmincer$Lntsd,tdmincer$exp, use = "na.or.complete",
+    method="spearman")
+
+```
+Se observa una tendencia inicial positiva, en la cual los primeros años de experiencia suelen estar asociados con aumentos en los ingresos. Sin embargo, esta relación se debilita o incluso se invierte a medida que la experiencia laboral aumenta. Esto sugiere que, aunque la experiencia es clave al inicio de la carrera profesional, factores como el envejecimiento o la llegada a techos salariales pueden influir en los ingresos a largo plazo. A pesar de estas tendencias generales, existe una considerable variabilidad en los ingresos entre individuos con la misma experiencia, lo que indica que otros factores, como el sector de actividad, la empresa y las habilidades específicas, también juegan un papel relevante.
+\
+
+**Grafico 6**
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+library(tidyverse)
+library(car)
+library(summarytools)
+library(DescTools)
+library(ineq)
+library(corrplot)
+library(ggplot2)
+library(PerformanceAnalytics)
+library(expss)
+library(DT)
+ggplot(tdmincer, aes(aeduc, Lntsd)) +
+  geom_point(aes(color = Departamentos), size = 3) +  
+  geom_smooth(method = "lm", se = TRUE, color = "black", fill = "lightgray") +  # Añadiendo líneas de confianza
+  labs(title = "Relacion entre el Lntsd y los Años de educación",
+       subtitle = "Hombres con Educación Superior en Ayacucho y Junín - Enaho 2023") +
+  scale_color_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC"))
+
+
+
+```
+\
+
+**coeficiente de correlacion de spearman del ln de la tasa salarial y los años de educacion**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+cor(tdmincer$Lntsd,tdmincer$aeduc, use = "na.or.complete",
+    method="spearman")
+
+
+
+```
+Los puntos en el gráfico están bastante dispersos, lo que refleja una considerable variabilidad en los ingresos incluso entre hombres con niveles educativos similares. A pesar de esta dispersión, se aprecia una ligera tendencia positiva, lo que sugiere que, en promedio, a mayor número de años de educación, mayores son los ingresos. No se observan diferencias significativas en la pendiente de la relación entre los dos departamentos, lo que indica que la relación entre educación e ingresos es similar en ambos casos. Sin embargo, sí se percibe una leve diferencia en los niveles de ingreso, siendo Junín el departamento que presenta, en promedio, mayores ingresos para un mismo nivel educativo.
+\
+
+**Tabla 15**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(tidyverse)
+library(expss)
+library(knitr)
+
+# Generar tabla cruzada con kable para exportar a Word
+tdmincer %>%
+  tab_cells(Lntsda) %>%
+  tab_cols(total(), zona) %>%
+  tab_stat_cases(label = "Casos") %>%
+  tab_stat_cpct(label = "% casos") %>%
+  tab_pivot(stat_position = "inside_columns") %>%
+  kable(format = "markdown")
+
+
+```
+\
+
+**Grafico 7**
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(zona), colour = as_factor(zona))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("Urbana" = "#006400", "Rural" = "#006400"), 
+                     labels = c("Urbana", "Rural")) +
+  scale_fill_manual(values = c("Urbana" = "#2ca25f", "Rural" = "#0066CC"), 
+                    labels = c("Urbana", "Rural")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun Zona - Enaho 2023") +
+  theme_bw(base_size = 14)
+
+
+```
+
+Las personas que viven en zonas urbanas tienden a tener ingresos diarios más altos que aquellas que residen en áreas rurales. Sin embargo, es importante destacar que esta es una tendencia general y que existen muchas excepciones. Esta diferencia en los ingresos puede estar relacionada con diversos factores, como la mayor disponibilidad de empleos formales y mejor remunerados en las ciudades, el acceso a servicios y oportunidades educativas, y el mayor costo de vida en las zonas urbanas. A pesar de esta tendencia, es fundamental reconocer que existen grandes desigualdades tanto dentro de las zonas urbanas como rurales, y que otros factores como el nivel educativo, la ocupación y el género también influyen significativamente en los ingresos de las personas.
+\
+
+**Tabla 16**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(tidyverse)
+library(expss)
+library(knitr)
+
+# Generar tabla cruzada
+tabla_cruzada <- tdmincer %>%
+  tab_cells(Lntsda) %>%
+  tab_cols(total(), jefeh) %>%
+  tab_stat_cases(label = "Casos") %>%
+  tab_stat_cpct(label = "% casos") %>%
+  tab_pivot(stat_position = "inside_columns") %>%
+  as.data.frame()
+
+# Mostrar la tabla cruzada con kable
+kable(tabla_cruzada, format = "markdown")
+
+
+```
+
+La tabla muestra que, en promedio, los jefes de hogar tienen ingresos más altos que los miembros no jefes, especialmente en el rango de 2 a 4 del Lntsda, donde predominan. Sin embargo, en el rango de 0 a 2, los miembros no jefes también tienen una presencia significativa, lo que sugiere que el rol de jefe de hogar no es el único factor que influye en los ingresos. Otros elementos, como la educación y la experiencia, también impactan en las diferencias.
+\
+
+**Grafico 8**
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(jefeh), colour = as_factor(jefeh))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("Jefe de Hogar" = "#006400", "Miembros no jefes" = "#006400"), 
+                     labels = c("Jefe de Hogar", "Miembros no jefes")) +
+  scale_fill_manual(values = c("Jefe de Hogar" = "#2ca25f", "Miembros no jefes" = "#0066CC"), 
+                    labels = c("Jefe de Hogar", "Miembros no jefes")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun Miembros de hogar - 
+                          Enaho 2023") +
+  theme_bw(base_size = 14)
+
+
+```
+
+En promedio, los jefes de hogar tienden a tener ingresos diarios más altos que los otros miembros del hogar. Sin embargo, es importante destacar que esta tendencia no es absoluta y que existen muchos casos en los que los miembros no jefes tienen ingresos similares o incluso mayores. Esto sugiere que el rol de jefe de hogar está asociado con mayores ingresos, pero no es el único factor determinante. Otros factores como la educación, la experiencia laboral, el sector económico y el género también influyen significativamente en los ingresos. Las diferencias en los ingresos entre jefes de hogar y otros miembros pueden estar relacionadas con las mayores responsabilidades económicas que suelen recaer sobre los jefes de hogar, así como con las diferentes oportunidades laborales a las que pueden acceder.
+\
+
+**Tabla 17**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(tidyverse)
+library(expss)
+library(knitr)
+
+# Generar tabla cruzada con kable para exportar
+tabla_cruzada <- tdmincer %>%
+  tab_cells(Lntsda) %>%
+  tab_cols(total(), region) %>%
+  tab_stat_cases(label = "Casos") %>%
+  tab_stat_cpct(label = "% casos") %>%
+  tab_pivot(stat_position = "inside_columns") %>%
+  as.data.frame()
+
+# Mostrar la tabla cruzada con kable
+kable(tabla_cruzada, format = "markdown", align = "c")
+
+
+```
+
+La tabla indica que, a pesar de cierta superposición en las distribuciones de ingresos entre la Costa, Sierra y Selva, la Costa presenta generalmente los ingresos más altos, especialmente en los rangos de 2 a 4 y >4 del Lntsda. Sin embargo, otros factores como la educación y la ocupación también afectan los ingresos. Las diferencias regionales reflejan desigualdades relacionadas con la concentración de actividades económicas y el acceso a servicios, lo que sugiere la necesidad de políticas públicas para una mejora de su población.
+\
+
+**Grafico 9**
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(region), colour = as_factor(region))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("Costa" = "#006400", "Sierra" = "#006400", "Selva" = "#006400"), 
+                     labels = c("Costa", "Sierra", "Selva")) +
+  scale_fill_manual(values = c("Costa" = "#2ca25f", "Sierra" = "#0066CC", "Selva" = "#FFD92F"), 
+                    labels = c("Costa", "Sierra", "Selva")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun Region - Enaho 2023") +
+  theme_bw(base_size = 14)
+
+
+```
+
+Si bien existe un solapamiento entre las distribuciones de las tres regiones (Costa, Sierra y Selva), en general, la Costa presenta los ingresos promedio más altos. Sin embargo, es importante destacar que esta es una tendencia general y que existen muchas excepciones. Otros factores como el nivel educativo, la ocupación, el sector económico y el tamaño de la localidad también influyen significativamente en los ingresos. Las diferencias regionales en los ingresos pueden estar relacionadas con factores como la concentración de actividades económicas, el acceso a servicios básicos, el desarrollo de infraestructuras y el capital humano. Este análisis sugiere que existen desigualdades regionales en Perú, las cuales requieren de políticas públicas específicas para reducirlas y promover un desarrollo más equitativo.
+\
+
+**Tabla 18**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(tidyverse)
+library(expss)
+library(knitr)
+
+# Generar tabla cruzada
+tabla_cruzada <- tdmincer %>%
+  tab_cells(Lntsda) %>%
+  tab_cols(total(), estadoc) %>%
+  tab_stat_cases(label = "Casos") %>%
+  tab_stat_cpct(label = "% casos") %>%
+  tab_pivot(stat_position = "inside_columns") %>%
+  as.data.frame()
+
+# Mostrar la tabla cruzada con kable
+kable(tabla_cruzada, format = "markdown", align = "c")
+
+```
+
+El cuadro muestra cómo los ingresos diarios varían según el estado civil de las personas, comparando a aquellos que están casados o conviviendo con los que no tienen pareja. En general, las personas casadas o convivientes tienden a tener ingresos diarios un poco más altos. Sin embargo, es importante señalar que esta tendencia no se cumple en todos los casos, ya que hay personas sin pareja que pueden ganar más. Esto sugiere que, aunque el estado civil puede afectar los ingresos, no es el único factor a considerar. Otros elementos como la educación, la experiencia laboral, el sector económico y el género también juegan un papel importante al momento de determiner el salario que ganan.
+\
+
+**Grafico 10**
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(estadoc), colour = as_factor(estadoc))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("Casados o Convivientes" = "#006400", "Sin pareja" = "#006400"), 
+                     labels = c("Casados o Convivientes", "Sin pareja")) +
+  scale_fill_manual(values = c("Casados o Convivientes" = "#2ca25f", "Sin pareja" = "#0066CC"), 
+                    labels = c("Casados o Convivientes", "Sin pareja")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun el Estado Civil - 
+                         Enaho 2023") +
+  theme_bw(base_size = 14)
+
+```
+
+El  gráfico nos muestra cómo los ingresos diarios varían según el estado civil de las personas, comparando a aquellos que están casados o conviviendo con aquellos que no tienen pareja. Observamos que, en promedio, las personas casadas o convivientes tienden a tener ingresos diarios ligeramente más altos. Sin embargo, es importante destacar que esta relación no es absoluta y que existen muchos casos en los que personas sin pareja tienen ingresos más elevados. Esto sugiere que el estado civil es un factor que influye en los ingresos, pero no es el único. Otros factores como la educación, la experiencia laboral, el sector económico y el género también juegan un papel importante en determinar el nivel de ingresos de una persona.
+\
+
+**Tabla 19**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(tidyverse)
+library(expss)
+library(knitr)
+
+# Generar tabla cruzada
+ft <- tdmincer %>%
+  tab_cells(Lntsda) %>%
+  tab_cols(total(), ocupinf) %>%
+  tab_stat_cases(label = "Casos") %>%
+  tab_stat_cpct(label = "% casos") %>%
+  tab_pivot(stat_position = "inside_columns") %>%
+  as.data.frame()
+
+# Mostrar la tabla cruzada con kable
+kable(ft, format = "markdown", align = "c")
+
+
+
+```
+
+La tabla muestra diferencias notables en la distribución de ingresos diarios entre trabajadores formales e informales en Perú. En general, los trabajadores formales tienden a tener ingresos más altos que los informales, lo cual se refleja en la mayor cantidad de casos en el rango de 2 a 4 del Lntsda, donde se encuentran los ingresos más altos. “Empleo Informal”: La mayoría de los casos en los rangos de 0 a 2 y <0 son informales, lo que sugiere que muchos de estos trabajadores están en la informalidad, afectando sus ingresos. En el rango de 2 a 4, aunque hay un número significativo de empleados informales (54 casos), también hay un porcentaje alto de empleados formales (49 casos), lo que indica que los trabajadores informales tienden a concentrarse en niveles de ingresos más bajos.
+\
+
+**Grafico 11**
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(readr)
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(ocupinf), colour = as_factor(ocupinf))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("empleo informal" = "#006400", "empleo formal" = "#006400"), 
+                     labels = c("empleo informal", "empleo formal")) +
+  scale_fill_manual(values = c("empleo informal" = "#2ca25f", "empleo formal" = "#0066CC"), 
+                    labels = c("empleo informal", "empleo formal")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun Formalidad Laboral - 
+                         Enaho 2023") +
+  theme_bw(base_size = 14)
+
+
+```
+
+El gráfico muestra una clara diferencia en la distribución de los ingresos diarios entre los trabajadores formales e informales en Perú. Los trabajadores formales, en promedio, tienden a tener mayores ingresos diarios que los informales, aunque existe un considerable solapamiento entre ambas distribuciones. Esto sugiere que otros factores además de la formalidad, como la educación, la experiencia laboral y el sector económico, influyen significativamente en los ingresos. Según la ecuación de Mincer nos permite entender mejor cómo el nivel educativo y la experiencia laboral se relacionan con los ingresos en cada sector. Sin embargo, es importante considerar que el retorno a la educación podría ser diferente en el sector formal y en el informal. Estos hallazgos tienen implicaciones importantes para el diseño de políticas públicas orientadas a reducir la informalidad laboral y promover la equidad en el mercado laboral peruano.
+\
+
+**Tabla 20**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(haven)
+library(tidyverse)
+library(expss)
+library(knitr)
+
+# Generar tabla cruzada
+ft <- tdmincer %>%
+  tab_cells(Lntsda) %>%
+  tab_cols(total(), geduc) %>%
+  tab_stat_cases(label = "Casos") %>%
+  tab_stat_cpct(label = "% casos") %>%
+  tab_pivot(stat_position = "inside_columns") %>%
+  as.data.frame()  # Convertir a data.frame para usar kable
+
+# Mostrar la tabla cruzada con kable
+kable(ft, format = "markdown", align = "c")
+
+```
+
+La tabla presenta la relación entre el nivel educativo (superior no universitario, superior universitaria y posgrado) y la tasa salarial, medida a través del logaritmo natural de la tasa salarial (Lntsda). A continuación, se desglosan los hallazgos más relevantes: “Distribución de Casos”: Hay un total de 172 casos analizados. En general, la mayoría de los casos (59,88%) se agrupan en el rango de 2 a 4 del Lntsda, lo que sugiere que los ingresos tienden a ser más altos en este intervalo.
+\
+
+**Discusion de resultados**
+El presente trabajo muestra un análisis profundo sobre los determinantes de los ingresos en los departamentos de Ayacucho y Junín a partir de la ecuación de Mincer, la cual relaciona la educación, la experiencia laboral y los ingresos. Utilizando datos de la Encuesta Nacional de Hogares (ENAHO), se examina cómo estas variables influyen en los salarios de los hombres en ambas regiones. Los resultados confirman que tanto la educación como la experiencia laboral juegan un papel crucial en la determinación de los ingresos, pero con diferencias significativas entre los dos departamentos.
+
+Se observa que los hombres con mayor nivel educativo, especialmente aquellos con estudios universitarios o de posgrado, tienden a obtener ingresos más altos. Sin embargo, los retornos a la educación no son uniformes. En Junín, la mayor demanda de mano de obra calificada, en un contexto de mayor desarrollo económico, permite que la educación tenga un impacto más fuerte en los ingresos. Por otro lado, en Ayacucho, donde la economía está más centrada en sectores tradicionales como la agricultura, los retornos a la educación son más limitados, reflejando la menor capacidad de esta región para aprovechar el capital humano de su población.
+
+En términos de experiencia laboral, los ingresos también aumentan con los años de trabajo, aunque de manera decreciente. Los primeros años de experiencia muestran un impacto significativo en los salarios, pero a medida que los trabajadores acumulan más años en el mercado laboral, los aumentos salariales se vuelven menos pronunciados. Esto puede estar relacionado con la saturación del mercado o con la falta de movilidad en sectores más tradicionales, como es el caso de Ayacucho, lo que reduce la oportunidad de que la experiencia se traduzca en mayores ingresos.
+
+Otro hallazgo clave es la marcada desigualdad en la distribución de los ingresos en ambas regiones. Utilizando la curva de Lorenz y el coeficiente de Gini, se detecta que una pequeña parte de la población concentra una gran proporción de los ingresos, mientras que la mayoría recibe salarios considerablemente más bajos. Esta desigualdad es más pronunciada en Ayacucho, donde la predominancia del empleo informal agrava la situación. El trabajo informal, que afecta a una gran parte de la población en esta región, está asociado con salarios bajos, menor estabilidad laboral y la ausencia de beneficios sociales. En Junín, en cambio, se observa una mayor proporción de empleos formales, lo que contribuye a una distribución más equitativa de los ingresos y a una mejor calidad de vida para sus trabajadores.
+
+La comparación entre Ayacucho y Junín también revela disparidades en el nivel de educación alcanzado por la población. En Junín, un mayor porcentaje de personas ha completado estudios universitarios o de posgrado, lo que les permite acceder a mejores oportunidades laborales y salarios más altos. En contraste, en Ayacucho, la mayoría de la población cuenta con estudios no universitarios, lo que limita su acceso a empleos de mayor remuneración. Esta diferencia en el capital humano acumulado entre las dos regiones es una de las principales razones detrás de las diferencias salariales observadas.
+
+El estudio también destaca que el contexto regional y el grado de urbanización son factores que influyen en los ingresos. Las personas que viven en áreas urbanas tienden a ganar más que aquellas que residen en zonas rurales, debido a la mayor concentración de oportunidades laborales formales y mejor remuneradas en las ciudades. Esta tendencia se observa tanto en Junín como en Ayacucho, aunque es más pronunciada en este último, donde la economía rural domina y las oportunidades de empleo son más limitadas. Sin embargo, dentro de las áreas urbanas también se observan desigualdades significativas, lo que sugiere que otros factores como la educación, la ocupación y el género también desempeñan un papel importante en la determinación de los ingresos.
+
+En cuanto a las diferencias por estado civil y género, el análisis muestra que los jefes de hogar tienden a recibir mayores ingresos que los demás miembros de la familia, lo que refleja la importancia del rol de proveedor económico en la estructura familiar. Sin embargo, este patrón no es absoluto, ya que otros factores, como el nivel educativo y la experiencia laboral, también influyen en los ingresos. Los hombres casados o convivientes suelen tener salarios más altos en comparación con aquellos que no tienen pareja, lo que puede estar relacionado con el doble ingreso en los hogares y las economías de escala que se generan en estos contextos.
+
+Finalmente, los resultados de este estudio sugieren la necesidad de políticas públicas que fomenten el acceso a la educación superior y promuevan la formalización del empleo, especialmente en regiones como Ayacucho, donde las oportunidades son más limitadas. El desarrollo económico de las zonas rurales y la diversificación de la economía en estas áreas son esenciales para reducir las disparidades en los ingresos y mejorar las condiciones de vida de la población. Además, la formalización laboral no solo aumentaría los salarios, sino que también ofrecería mayor seguridad y estabilidad a los trabajadores, contribuyendo a una distribución más equitativa de los ingresos.
+\
+**Conclusiones**
+El presente estudio ha explorado la relación entre el nivel educativo, la experiencia laboral y los ingresos en los departamentos de Ayacucho y Junín, utilizando la ecuación de Mincer y datos de la Encuesta Nacional de Hogares (ENAHO). Los resultados obtenidos permiten extraer diversas conclusiones relevantes.
+En primer lugar, se confirma la importancia del capital humano, medido a través de los años de educación y experiencia laboral, como un determinante clave de los ingresos individuales. Los individuos con mayor nivel educativo y mayor experiencia laboral tienden a percibir salarios más altos. Sin embargo, el retorno a la educación varía según el nivel educativo y el contexto regional, siendo generalmente mayor en el caso de la educación superior universitaria.
+En segundo lugar, se evidencia una significativa desigualdad en la distribución de los ingresos en ambos departamentos, con una concentración de los ingresos en un segmento reducido de la población. Esta desigualdad se ve exacerbada por factores como la informalidad laboral, la concentración de la población en áreas urbanas y las diferencias regionales en el acceso a oportunidades educativas y laborales.
+En tercer lugar, el análisis comparativo entre Ayacucho y Junín revela diferencias notables en la estructura productiva y en las oportunidades laborales. Junín, al presentar una mayor concentración de actividades económicas formales y un mayor nivel educativo promedio, exhibe mayores niveles de ingreso. Por el contrario, Ayacucho, con una economía más basada en la agricultura y una menor proporción de población con estudios superiores, presenta menores ingresos promedio.
+\
+
+**Referencia bibliograficas**
+
+Cañibano Sánchez, D. (2005). El capital humano: factor de innovación, competitividad y crecimiento . Universidad Rey Juan Carlos 
+
+González Paucarhuanca, EJ (2019). Ingreso laboral y capital humano en la región Ayacucho 
+
+Vásquez Roldán, JS, López González, M., & Torres Gómez, E. (2020). Las ecuaciones de Mincer y el mercado laboral para los desmovilizados en Colombia. Revista Espacios 
+
+Souto Anido, L. Capital humano. Revisión conceptual desde la economía política .
+
+Mincer y el mercado laboral para los desmovilizados en Colombia. Revista Espacios Souto Anido, L. Capital humano. Revisión conceptual desde la economía política .
+
+Freire, J & Tejeiro, M. (2010). La ecuacion de mincer y las tasas de rendimiento de la educación en Galicia.
+HIRST Paul (2000): “La economía del conocimiento: ¿realidad o fábula?”, Este país tendencias y opiniones.
+
+SCHULTZ, T.W. (1983) La inversión en capital humano, educación y sociedad, volumen
+8.
+
+Sapelli, Claudio. “Ecuaciones de Mincer y Tasas de Retorno a la Educación en Chile: 1990-1998”. (2003).Pontificia Universidad Católica de Chile. Santiago, Chile.
+
+
+\
+**Anexos**
+
