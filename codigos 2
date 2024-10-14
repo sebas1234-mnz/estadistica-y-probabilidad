@@ -1,0 +1,348 @@
+# Resultados descriptivos de las variables de la ecuación de Mincer
+# Se carga la tabla de datos
+library(haven)
+tdmincer <- read_dta("tdmincer.dta")
+View(tdmincer)
+#Se instala los paquetes necesarios 
+install.packages("DescTools")
+install.packages("ineq")
+install.packages("PerformanceAnalytics")
+install.packages("corrplot")
+install.packages("expss")
+install.packages("DT")
+install.packages("htmltools")
+
+# Se cargan las librerias para el trabajo descriptivo
+library(tidyverse)
+library(car)
+library(summarytools)
+library(DescTools)
+library(ineq)
+library(corrplot)
+library(ggplot2)
+library(PerformanceAnalytics)
+library(expss)
+library(DT)
+
+#Analisis Unidimensional de las variables de estudio 
+
+#Variables cuantitativas
+
+# Descripción de la variable ln de la tasa salario (dependiente)
+# tabla de frecuencias 
+freq(as_factor(tdmincer$Lntsda))
+
+#Medidas de resumen
+summary(tdmincer$Lntsd)
+
+#Medidas estadisticas agrupadas por años de educacion
+tdmincer%>%group_by(aeduc)%>%summarise(min(Lntsd), mean(Lntsd), 
+                                       sd(Lntsd),max(Lntsd))
+
+#Medidas estadisticas agrupadas por experiencia
+tdmincer%>%group_by(expa)%>%summarise(min(Lntsd), mean(Lntsd), 
+                                      sd(Lntsd),max(Lntsd))
+
+
+#Histograma
+ggplot(data = tdmincer, aes(x = Lntsd, fill = Departamentos, colour = Departamentos)) +
+  geom_histogram(alpha = 0.5, position = "dodge") +  # Cambiado a 'dodge'
+  scale_color_manual(values = c("Ayacucho" = "#006400", "Junin" = "#006400"), 
+                     labels = c("Ayacucho", "Junin")) +
+  scale_fill_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC"), 
+                    labels = c("Ayacucho", "Junin")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Logaritmo de la Tasa Salarial
+             por Departamento - Enaho 2023") +
+  theme_bw(base_size = 14)
+
+#Curva de Lorenz
+lorenz_curve_tsd <- Lc(tdmincer$tsd)
+
+plot(lorenz_curve_tsd, xlab = "Proporción acumulada de individuos", 
+     ylab = "Proporción acumulada de la tasa salarial diaria", 
+     main = "Curva de Lorenz: Tasa Salarial Diaria - Enaho 2023")
+
+#Coeficiente de Gini
+gini <- Gini(tdmincer$Lntsd)
+print(gini)
+
+# Descripción de la variable años de ecuacion (independiente)
+# tabla de frecuencias 
+
+freq(as_factor(tdmincer$aeduc))
+
+#Medidas de resumen
+summary(tdmincer$aeduc)
+
+#Grafico de Barras
+
+ggplot(tdmincer, aes(aeduc, fill = Departamentos)) + 
+  geom_bar(position = "dodge", colour = "black") +
+  
+  labs(x = "Años de Educación", y = "Frecuencias", fill = "Departamento") +
+  ylim(c(0, 100)) +
+  
+  ggtitle("Diagrama de barras en Hombres por departamento
+   con grados de Educación Superior - Enaho 2023") +   
+  
+  theme_bw(base_size = 14) +
+  
+  geom_text(aes(label = ..count..), stat = 'count',
+            position = position_dodge(0.9),
+            vjust = -0.5, 
+            size = 5.0) +
+  
+  scale_fill_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC")) +
+  
+  facet_wrap(~"Distribución de Años de Estudio por Departamento")
+
+
+#Grafico de Barras para la variable cualitativa geduc (control)
+ggplot(tdmincer, aes(geduc,  fill=Departamentos)) + 
+  geom_bar(position="dodge",colour="black") +
+  
+  labs(x= "Grado de Educación", y="Frecuencias", fill="Departamento") +
+  ylim(c(0,100)) +
+  #xlim(c(0,300)) + 
+  
+  ggtitle("Diagrama de barras en Hombres por departamentos 
+  con grados de Educacion Superior - Enaho 2023") +   
+
+  theme_bw(base_size = 14) +
+  
+  geom_text(aes(label=..count..),stat='count',
+            position=position_dodge(0.9),
+            vjust=-0.5, 
+            size=5.0) +
+  
+  scale_fill_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC")) +
+  
+  facet_wrap(~"Distribución de Años de Estudio por Departamento")
+
+
+
+# Descripción de la variable experiencia (independiente)
+# tabla de frecuencias 
+
+freq(as_factor(tdmincer$expa))
+
+#Medidas de resumen
+summary(tdmincer$exp)
+
+#Histograma
+ggplot(data = tdmincer, aes(x = exp, fill = Departamentos, colour = Departamentos)) +
+  geom_histogram(alpha = 0.5, position = "dodge") +  # Cambiado a 'dodge'
+  scale_color_manual(values = c("Ayacucho" = "#006400", "Junin" = "#006400"), 
+                     labels = c("Ayacucho", "Junin")) +
+  scale_fill_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC"), 
+                    labels = c("Ayacucho", "Junin")) +
+  labs(x = "Experiencia", y = "Frecuencia") +
+  ggtitle("Distribución de la Experiencia por Departamento 
+                          - Enaho 2023") +
+  theme_bw(base_size = 14)
+
+#Variables cualitativas
+
+# tabla de frecuencias 
+freq(as_factor(tdmincer$zona))    #Zona (control)
+freq(as_factor(tdmincer$jefeh))   #Jefe de hogar (control)
+freq(as_factor(tdmincer$region))  #Region (control)
+freq(as_factor(tdmincer$estadoc)) #Estado civil (control) 
+freq(as_factor(tdmincer$ocupinf)) #Informalidad (control)
+freq(as_factor(tdmincer$geduc))   #Grado de ecuacion (control)
+
+
+#Analisis Bidimensional de las variables de estudio 
+
+
+# Graficos de relacion de la dependiente y las independientes
+
+#Lntsd y exp
+ggplot(tdmincer, aes(exp, Lntsd)) +
+  geom_point(aes(color = Departamentos), size = 3) +  
+  geom_smooth(color = "black", fill = "lightgray") +  # Añadiendo líneas de confianza
+  labs(title = "Relación entre el Lntsd y la Experiencia",
+       subtitle = "Hombres con Educación Superior en Ayacucho y Junín - Enaho 2023") +
+  scale_color_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC"))
+
+cor(tdmincer$Lntsd,tdmincer$exp, use = "na.or.complete",
+    method="spearman")
+
+#Matriz de correlacion de Lntsd y exp
+round(cor(data1), 2)    
+correlacion1<-round(cor(data1), 4)
+corrplot(correlacion1, method="number", type="upper")
+
+#Lntsd y aeduc
+ggplot(tdmincer, aes(aeduc, Lntsd)) +
+  geom_point(aes(color = Departamentos), size = 3) +  
+  geom_smooth(method = "lm", se = TRUE, color = "black", fill = "lightgray") +  # Añadiendo líneas de confianza
+  labs(title = "Relacion entre el Lntsd y los Años de educación",
+       subtitle = "Hombres con Educación Superior en Ayacucho y Junín - Enaho 2023") +
+  scale_color_manual(values = c("Ayacucho" = "#2ca25f", "Junin" = "#0066CC"))
+
+cor(tdmincer$Lntsd,tdmincer$aeduc, use = "na.or.complete",
+    method="spearman")
+
+#Matriz de correlacion de Lntsd y aeduc
+round(cor(data2), 2)    
+correlacion2<-round(cor(data2), 4)
+corrplot(correlacion2, method="number", type="upper")
+
+
+
+#Tablas y Graficos de relacion  de la dependiente y las de control
+
+#Tabla cruzada de Lntsda y zona
+
+as.datatable_widget(tdmincer %>%
+                      tab_cells(Lntsda) %>%
+                      tab_cols(total(), zona) %>%
+                      tab_stat_cases(label = "Casos") %>%
+                      tab_stat_cpct(label = "% casos") %>%
+                      tab_pivot(stat_position = "inside_columns"))
+
+# Histograma por grupo en ggplot2 para zona
+
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(zona), colour = as_factor(zona))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("Urbana" = "#006400", "Rural" = "#006400"), 
+                     labels = c("Urbana", "Rural")) +
+  scale_fill_manual(values = c("Urbana" = "#2ca25f", "Rural" = "#0066CC"), 
+                    labels = c("Urbana", "Rural")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun Zona - Enaho 2023") +
+  theme_bw(base_size = 14)
+
+
+
+#Tabla cruzada de Lntsda y jefeh
+
+as.datatable_widget(tdmincer %>%
+                      tab_cells(Lntsda) %>%
+                      tab_cols(total(), jefeh) %>%
+                      tab_stat_cases(label = "Casos") %>%
+                      tab_stat_cpct(label = "% casos") %>%
+                      tab_pivot(stat_position = "inside_columns"))
+
+# Histograma por grupo en ggplot2 para jefeh
+
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(jefeh), colour = as_factor(jefeh))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("Jefe de Hogar" = "#006400", "Miembros no jefes" = "#006400"), 
+                     labels = c("Jefe de Hogar", "Miembros no jefes")) +
+  scale_fill_manual(values = c("Jefe de Hogar" = "#2ca25f", "Miembros no jefes" = "#0066CC"), 
+                    labels = c("Jefe de Hogar", "Miembros no jefes")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun Miembros de hogar - 
+                          Enaho 2023") +
+  theme_bw(base_size = 14)
+
+#Tabla cruzada de Lntsda y region
+
+as.datatable_widget(tdmincer %>%
+                      tab_cells(Lntsda) %>%
+                      tab_cols(total(), region) %>%
+                      tab_stat_cases(label = "Casos") %>%
+                      tab_stat_cpct(label = "% casos") %>%
+                      tab_pivot(stat_position = "inside_columns"))
+
+
+# Histograma por grupo en ggplot2 para region
+
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(region), colour = as_factor(region))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("Costa" = "#006400", "Sierra" = "#006400", "Selva" = "#006400"), 
+                     labels = c("Costa", "Sierra", "Selva")) +
+  scale_fill_manual(values = c("Costa" = "#2ca25f", "Sierra" = "#0066CC", "Selva" = "#FFD92F"), 
+                    labels = c("Costa", "Sierra", "Selva")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun Region - Enaho 2023") +
+  theme_bw(base_size = 14)
+
+
+#Tabla cruzada de Lntsda y estadoc
+
+as.datatable_widget(tdmincer %>%
+                      tab_cells(Lntsda) %>%
+                      tab_cols(total(), estadoc) %>%
+                      tab_stat_cases(label = "Casos") %>%
+                      tab_stat_cpct(label = "% casos") %>%
+                      tab_pivot(stat_position = "inside_columns"))
+
+
+# Histograma por grupo en ggplot2 para estadoc
+
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(estadoc), colour = as_factor(estadoc))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("Casados o Convivientes" = "#006400", "Sin pareja" = "#006400"), 
+                     labels = c("Casados o Convivientes", "Sin pareja")) +
+  scale_fill_manual(values = c("Casados o Convivientes" = "#2ca25f", "Sin pareja" = "#0066CC"), 
+                    labels = c("Casados o Convivientes", "Sin pareja")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun el Estado Civil - 
+                         Enaho 2023") +
+  theme_bw(base_size = 14)
+
+
+#Tabla cruzada de Lntsda y ocupinf
+
+as.datatable_widget(tdmincer %>%
+                      tab_cells(Lntsda) %>%
+                      tab_cols(total(), ocupinf) %>%
+                      tab_stat_cases(label = "Casos") %>%
+                      tab_stat_cpct(label = "% casos") %>%
+                      tab_pivot(stat_position = "inside_columns"))
+
+# Histograma por grupo en ggplot2 para ocupinf
+
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(ocupinf), colour = as_factor(ocupinf))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("empleo informal" = "#006400", "empleo formal" = "#006400"), 
+                     labels = c("empleo informal", "empleo formal")) +
+  scale_fill_manual(values = c("empleo informal" = "#2ca25f", "empleo formal" = "#0066CC"), 
+                    labels = c("empleo informal", "empleo formal")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun Formalidad Laboral - 
+                         Enaho 2023") +
+  theme_bw(base_size = 14)
+
+
+#Tabla cruzada de Lntsda y geduc
+
+as.datatable_widget(tdmincer %>%
+                      tab_cells(Lntsda) %>%
+                      tab_cols(total(), geduc) %>%
+                      tab_stat_cases(label = "Casos") %>%
+                      tab_stat_cpct(label = "% casos") %>%
+                      tab_pivot(stat_position = "inside_columns"))
+
+# Histograma por grupo en ggplot2 para geduc
+
+ggplot(tdmincer, aes(x = Lntsd, fill = as_factor(geduc), colour = as_factor(geduc))) + 
+  geom_histogram(alpha = 0.5, position = "dodge") + 
+  scale_color_manual(values = c("Superior No Univ." = "#006400", "Superior Univ." = "#006400", "Posgrado" = "#006400"), 
+                     labels = c("Superior No Univ.", "Superior Univ.", "Posgrado")) +
+  scale_fill_manual(values = c("Superior No Univ." = "#2ca25f", "Superior Univ." = "#0066CC", "Posgrado" = "#FFD92F"), 
+                    labels = c("Superior No Univ.", "Superior Univ.", "Posgrado")) +
+  labs(x = "Lntsd", y = "Frecuencia") +
+  ggtitle("Distribución del Lntsd segun Grado de Educación - 
+                            Enaho 2023") +
+  theme_bw(base_size = 14)
+#otra webada 
+data1 <- data1 %>% rename(Lntsd_data1 = tdmincer.Lntsd)
+write_dta(data1, "data1.dta")
+setwd("C:/Users/SEBAS/Downloads")
+write_dta(tdmincer, "data1.dta")
+
+write_dta(data2, "data2.dta")
+setwd("C:/Users/SEBAS/Downloads")
+write_dta(tdmincer, "data2.dta")
+
+
+data1$Lntsd_data1 <- as.numeric(data1$Lntsd_data1)
+data1$tdmincer.exp <- as.numeric(data1$tdmincer.exp)
+data2 <- data2 %>% rename(Lntsd_data2 = tdmincer.Lntsd)
+
+data2 <- data2 %>% rename(aeduc_data2 = tdmincer.aeduc)
